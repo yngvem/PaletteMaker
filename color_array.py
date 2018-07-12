@@ -124,7 +124,7 @@ class ColorArray(np.ndarray):
         return lab.to_xyz()
     
     def _hcl_to_lab(self, hcl):
-        lab = np.copy(hcl)
+        lab = hcl.copy()
         lab[..., 0] = lab[..., 2]
         lab[..., 1], lab[..., 2] = self._pol_to_cart(hcl[..., 1], hcl[..., 0])
         lab.color_space = 'lab'
@@ -182,7 +182,7 @@ class ColorArray(np.ndarray):
         return self._lab_to_hcl(self.to_lab())
 
     def _lab_to_hcl(self, lab):
-        hcl = np.copy(lab)
+        hcl = lab.copy()
         hcl[..., 2] = hcl[..., 0]
         hcl[..., 1], hcl[..., 0] = self._cart_to_pol(lab[..., 1], lab[..., 2])
         hcl.color_space = 'hcl'
