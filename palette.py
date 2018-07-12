@@ -1,4 +1,9 @@
-class ColorPalette
+from color_array import ColorArray
+import matplotlib.colors as mpl_colors
+import numpy as np
+
+
+class ColorPalette:
     def __init__(self, reference_colors):
         """Initiates a color palette instance
 
@@ -8,6 +13,12 @@ class ColorPalette
             Color array of length two that specifies the colors to interpolate
             between.
         """
+        if not isinstance(reference_colors, ColorArray):
+            raise ValueError("`reference_colors` must be a ColorArray instance")
+        if len(reference_colors.shape) != 2:
+            raise ValueError("`reference_colors` must be two-dimensional "
+                             "(one color dimension and one channel dimension).")
+
         self.reference_colors = reference_colors
 
     def generate_cmap(self, n_interpolants=256):
@@ -29,5 +40,26 @@ class ColorPalette
         --------
         LinearSegmentedColormap 
         """
-        pass
+        colors = self._interpolate(n_interpolants)
+
+        return mpl_colors.LinearSegmentedColormap.from_list(colors)
+
+    def generate_swatches(self, n_swatches):
+        self._interpolate(n_swatches)
+
+    def _interpolate(self, n_interpolants):
+        """Generate `n_interpolants` colours from the reference colors.
+
+        The specified colours are linearly interpolated.
+        """         
+
+        if n_interpolants < 1:
+            raise ValueError('Must be at least one interpolant')
+        weights = np.tile(np.arange(n_interpolants)/(n_interpolants-1), (3, 1)).T
+
+        colors = self.reference_colors[np.newaxis, 0]*np.flip(weights, 0) \
+               + self.reference_colors[np.newaxis, 1]*weights
+
+        return colors
+
 

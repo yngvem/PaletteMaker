@@ -41,24 +41,22 @@ def test_interpolation_preserves_color_space(random_rgb_color_palette,
 
 def test_interpolation_preserves_endpoints(random_rgb_color_palette):
     endpoints = random_rgb_color_palette.reference_colors
-    assert random_rgb_color_palette._interpolate(2)[0] == endpoints[0]
-    assert random_rgb_color_palette._interpolate(5)[0] == endpoints[0]
-    assert random_rgb_color_palette._interpolate(10)[0] == endpoints[0]
+    assert np.allclose(random_rgb_color_palette._interpolate(2)[0], endpoints[0])
+    assert np.allclose(random_rgb_color_palette._interpolate(5)[0], endpoints[0])
+    assert np.allclose(random_rgb_color_palette._interpolate(10)[0], endpoints[0])
 
-    assert random_rgb_color_palette._interpolate(2)[-1] == endpoints[-1]
-    assert random_rgb_color_palette._interpolate(5)[-1] == endpoints[-1]
-    assert random_rgb_color_palette._interpolate(10)[-1] == endpoints[-1]
+    assert np.allclose(random_rgb_color_palette._interpolate(2)[-1], endpoints[-1])
+    assert np.allclose(random_rgb_color_palette._interpolate(5)[-1], endpoints[-1])
+    assert np.allclose(random_rgb_color_palette._interpolate(10)[-1], endpoints[-1])
 
-def test_interpolation_fails_with_less_than_two_nodes(random_rgb_color_palette):
-    with raises(ValueError):
-        random_rgb_color_palette._interpolate(1)
+def test_interpolation_fails_with_less_than_one_node(random_rgb_color_palette):
     with raises(ValueError):
         random_rgb_color_palette._interpolate(0)
     with raises(ValueError):
         random_rgb_color_palette._interpolate(-1)
 
 def test_odd_interpolation_midpoint_is_mean(random_rgb_color_palette):
-    mean_color = random_rgb_color_palette.mean(axis=0)
+    mean_color = random_rgb_color_palette.reference_colors.mean(axis=0)
     assert np.allclose(random_rgb_color_palette._interpolate(3)[1], mean_color)
     assert np.allclose(random_rgb_color_palette._interpolate(5)[2], mean_color)
 
