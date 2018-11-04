@@ -63,3 +63,29 @@ class ColorPalette:
         return colors
 
 
+if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+
+    reference_colors = ColorArray([[.4, .26, .35], [.53, .7, .87]]).to_hcl()
+    name = 'test_pallete'
+    pallete = ColorPalette(reference_colors, name)
+
+    # Some random data for line plots
+    num_lines = 5
+    x = np.linspace(-1, 1, 10)
+    ys = [np.random.randn(10) for _ in range(num_lines)]
+
+    # Some random data for heatmap
+    y = x.copy()
+    xx, yy = np.meshgrid(x, y)
+    def r(x, y):
+        return np.sqrt(x**2 + y**2)
+    zz = np.sinc(r(xx, yy))
+
+    # Plot the stuff
+    fig, subs = plt.subplots(1, 2)
+    colors = pallete.generate_swatches(num_lines)
+    
+    for yi, color in zip(ys, colors):
+        plt.plot(x, yi, color=color)
+    plt.show()
