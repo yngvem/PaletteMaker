@@ -27,12 +27,19 @@ def random_lab(random_array):
 def random_xyz(random_array):
     return ColorArray(random_array, color_space='xyz')
 
+@fixture
+def random_hcl(random_array):
+    return ColorArray(random_array, color_space='hcl')
+
 
 #----------------- Tests ------------------#
 def test_rgb_to_xyz_inverted_by_xyz_to_rgb(random_rgb):
     assert np.allclose(random_rgb, random_rgb.to_xyz().to_rgb())
 
 def test_rgb_to_lab_inverted_by_lab_to_rgb(random_rgb):
+    assert np.allclose(random_rgb, random_rgb.to_lab().to_rgb())
+
+def test_rgb_to_hcl_inverted_by_hcl_to_rgb(random_rgb):
     assert np.allclose(random_rgb, random_rgb.to_lab().to_rgb())
 
 def test_rgb_to_rgb(random_rgb):
@@ -44,6 +51,9 @@ def test_xyz_to_rgb_inverted_by_rgb_to_xyz(random_xyz):
 def test_xyz_to_lab_inverted_by_lab_to_xyz(random_xyz):
     assert np.allclose(random_xyz, random_xyz.to_lab().to_xyz())
 
+def test_xyz_to_hcl_inverted_by_hcl_to_xyz(random_xyz):
+    assert np.allclose(random_xyz, random_xyz.to_hcl().to_xyz())
+
 def test_xyz_to_xyz_(random_xyz):
     assert np.allclose(random_xyz, random_xyz.to_xyz())
 
@@ -53,11 +63,23 @@ def test_lab_to_xyz_inverted_by_xyz_to_lab(random_lab):
 def test_lab_to_rgb_inverted_by_rgb_to_lab(random_lab):
     assert np.allclose(random_lab, random_lab.to_rgb().to_lab())
 
+def test_lab_to_hcl_inverted_by_hcl_to_lab(random_lab):
+    assert np.allclose(random_lab, random_lab.to_hcl().to_lab())
+    
 def test_lab_to_lab(random_lab):
     assert np.allclose(random_lab, random_lab.to_lab())
 
+def test_hcl_to_rgb_inverted_by_rgb_to_hcl(random_hcl):
+    assert np.allclose(random_hcl, random_hcl.to_rgb().to_hcl())
 
-
+def test_hcl_to_xyz_inverted_by_xyz_to_hcl(random_hcl):
+    assert np.allclose(random_hcl, random_hcl.to_xyz().to_hcl())
+    
+def test_hcl_to_lab_inverted_by_lab_to_hcl(random_hcl):
+    assert np.allclose(random_hcl, random_hcl.to_lab().to_hcl())    
+    
+def test_hcl_to_hcl(random_hcl):
+    assert np.allclose(random_hcl, random_hcl.to_hcl())
 
 
 
