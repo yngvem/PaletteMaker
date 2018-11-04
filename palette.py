@@ -13,14 +13,22 @@ class ColorPalette:
             Color array of length two that specifies the colors to interpolate
             between.
         """
+        self.reference_colors = reference_colors
+        self.name = name
+
+    @property
+    def reference_colors(self):
+        return self._reference_colors
+    
+    @reference_colors.setter
+    def reference_colors(self, reference_colors):
         if not isinstance(reference_colors, ColorArray):
             raise ValueError("`reference_colors` must be a ColorArray instance")
         if len(reference_colors.shape) != 2:
             raise ValueError("`reference_colors` must be two-dimensional "
                              "(one color dimension and one channel dimension).")
 
-        self.reference_colors = reference_colors
-        self.name = name
+        self._reference_colors = reference_colors
 
     def generate_cmap(self, n_interpolants=256):
         """Create a matplotlib colormap from the reference array
