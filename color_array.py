@@ -6,10 +6,10 @@ import numpy as np
 
 class ColorArray(np.ndarray):
     def __new__(cls, input_array, color_space='rgb'):
-        if input_array.shape[-1] != 3:
-            raise ValueError('Last dimension of color arrays must be three')
         obj = np.asarray(input_array).view(cls)
         obj.color_space = color_space
+        if obj.shape[-1] != 3:
+            raise ValueError('Last dimension of color arrays must be three')
         return obj
 
     def __array_finalize__(self, obj):
