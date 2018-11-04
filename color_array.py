@@ -2,6 +2,7 @@ __version__ = '0.1'
 __author__ = 'Marie Roald & Yngve Moe'
 
 import numpy as np
+from numba import jit
 
 
 class ColorArray(np.ndarray):
@@ -16,6 +17,16 @@ class ColorArray(np.ndarray):
         if obj is None: return
         self.color_space = getattr(obj, 'color_space', None)
 
+    @staticmethod
+    @jit(nopython=True, nogil=True)
+    def _set_illegal_vals_nan(rgb):
+        rgb_ = rgb.reshape(-1, 3)
+        for i in range(rgb_.shape[0]):
+            if np.any(np.logical_or(rgb_[i] < 0, rgb_[i] > 1)):
+                rgb_[i, :] = np.nan
+
+        return rgb_.reshape(rgb.shape)
+
     def to_rgb(self, illegal_rgb_behaviour=None):
         """Translate the colour representation to (s)RGB.
         """
@@ -29,8 +40,7 @@ class ColorArray(np.ndarray):
             elif illegal_rgb_behaviour.lower() == 'project':
                 return np.clip(rgb, 0, 1)
             elif illegal_rgb_behaviour.lower() == 'nan':
-                rgb[rgb<0] = np.nan
-                rgb[rgb>1] = np.nan
+                rgb = self._set_illegal_vals_nan(rgb)
                 return rgb
             else:
                 raise ValueError('Illegal rgb behaviour must be "none", "project" or "nan"')
