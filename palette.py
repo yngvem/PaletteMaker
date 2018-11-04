@@ -41,11 +41,11 @@ class ColorPalette:
         --------
         LinearSegmentedColormap 
         """
-        colors = self._interpolate(n_interpolants)
+        colors = self._interpolate(n_interpolants).to_rgb()
         return mpl_colors.LinearSegmentedColormap.from_list(self.name, colors)
 
     def generate_swatches(self, n_swatches):
-        self._interpolate(n_swatches)
+        return self._interpolate(n_swatches).to_rgb()
 
     def _interpolate(self, n_interpolants):
         """Generate `n_interpolants` colours from the reference colors.
@@ -76,8 +76,8 @@ if __name__ == '__main__':
     ys = [np.random.randn(10) for _ in range(num_lines)]
 
     # Some random data for heatmap
-    y = x.copy()
-    xx, yy = np.meshgrid(x, y)
+    y = np.linspace(-5, 5, 100)
+    xx, yy = np.meshgrid(y, y)
     def r(x, y):
         return np.sqrt(x**2 + y**2)
     zz = np.sinc(r(xx, yy))
@@ -85,7 +85,10 @@ if __name__ == '__main__':
     # Plot the stuff
     fig, subs = plt.subplots(1, 2)
     colors = pallete.generate_swatches(num_lines)
-    
+    print(colors)
     for yi, color in zip(ys, colors):
-        plt.plot(x, yi, color=color)
+        subs[0].plot(x, yi, color=color)
+
+    colormap = pallete.generate_cmap()
+    subs[1].imshow(zz, cmap=colormap)
     plt.show()
