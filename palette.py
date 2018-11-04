@@ -4,7 +4,7 @@ import numpy as np
 
 
 class ColorPalette:
-    def __init__(self, reference_colors):
+    def __init__(self, reference_colors, name='pallete_maker_cmap'):
         """Initiates a color palette instance
 
         Parameters:
@@ -20,6 +20,7 @@ class ColorPalette:
                              "(one color dimension and one channel dimension).")
 
         self.reference_colors = reference_colors
+        self.name = name
 
     def generate_cmap(self, n_interpolants=256):
         """Create a matplotlib colormap from the reference array
@@ -41,8 +42,7 @@ class ColorPalette:
         LinearSegmentedColormap 
         """
         colors = self._interpolate(n_interpolants)
-
-        return mpl_colors.LinearSegmentedColormap.from_list(colors)
+        return mpl_colors.LinearSegmentedColormap.from_list(self.name, colors)
 
     def generate_swatches(self, n_swatches):
         self._interpolate(n_swatches)
