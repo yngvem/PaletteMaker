@@ -4,7 +4,7 @@ import numpy as np
 
 
 class ColorPalette:
-    def __init__(self, reference_colors, name='pallete_maker_cmap'):
+    def __init__(self, reference_colors, name="pallete_maker_cmap"):
         """Initiates a color palette instance
 
         Parameters:
@@ -19,14 +19,16 @@ class ColorPalette:
     @property
     def reference_colors(self):
         return self._reference_colors
-    
+
     @reference_colors.setter
     def reference_colors(self, reference_colors):
         if not isinstance(reference_colors, ColorArray):
             raise ValueError("`reference_colors` must be a ColorArray instance")
         if len(reference_colors.shape) != 2:
-            raise ValueError("`reference_colors` must be two-dimensional "
-                             "(one color dimension and one channel dimension).")
+            raise ValueError(
+                "`reference_colors` must be two-dimensional "
+                "(one color dimension and one channel dimension)."
+            )
 
         self._reference_colors = reference_colors
 
@@ -59,23 +61,25 @@ class ColorPalette:
         """Generate `n_interpolants` colours from the reference colors.
 
         The specified colours are linearly interpolated.
-        """         
+        """
 
         if n_interpolants < 1:
-            raise ValueError('Must be at least one interpolant')
-        weights = np.tile(np.arange(n_interpolants)/(n_interpolants-1), (3, 1)).T
+            raise ValueError("Must be at least one interpolant")
+        weights = np.tile(np.arange(n_interpolants) / (n_interpolants - 1), (3, 1)).T
 
-        colors = self.reference_colors[np.newaxis, 0]*np.flip(weights, 0) \
-               + self.reference_colors[np.newaxis, 1]*weights
+        colors = (
+            self.reference_colors[np.newaxis, 0] * np.flip(weights, 0)
+            + self.reference_colors[np.newaxis, 1] * weights
+        )
 
         return colors
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    reference_colors = ColorArray([[.4, .26, .35], [.53, .7, .87]]).to_hcl()
-    name = 'test_pallete'
+    reference_colors = ColorArray([[0.4, 0.26, 0.35], [0.53, 0.7, 0.87]]).to_hcl()
+    name = "test_pallete"
     pallete = ColorPalette(reference_colors, name)
 
     # Some random data for line plots
@@ -86,8 +90,10 @@ if __name__ == '__main__':
     # Some random data for heatmap
     y = np.linspace(-5, 5, 100)
     xx, yy = np.meshgrid(y, y)
+
     def r(x, y):
-        return np.sqrt(x**2 + y**2)
+        return np.sqrt(x ** 2 + y ** 2)
+
     zz = np.sinc(r(xx, yy))
 
     # Plot the stuff
