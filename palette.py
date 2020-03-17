@@ -32,7 +32,7 @@ class ColorPalette:
 
         self._reference_colors = reference_colors
 
-    def generate_cmap(self, n_interpolants=256):
+    def generate_cmap(self, n_interpolants=256, illegal_rgb_behavior='project'):
         """Create a matplotlib colormap from the reference array
 
         Generates a color map which ranges from the first color in 
@@ -51,11 +51,11 @@ class ColorPalette:
         --------
         LinearSegmentedColormap 
         """
-        colors = self._interpolate(n_interpolants).to_rgb()
+        colors = self._interpolate(n_interpolants).to_rgb(illegal_rgb_behavior=illegal_rgb_behavior)
         return mpl_colors.LinearSegmentedColormap.from_list(self.name, colors)
 
-    def generate_swatches(self, n_swatches):
-        return self._interpolate(n_swatches).to_rgb()
+    def generate_swatches(self, n_swatches, illegal_rgb_behavior='project'):
+        return self._interpolate(n_swatches).to_rgb(illegal_rgb_behavior=illegal_rgb_behavior)
 
     def _interpolate(self, n_interpolants):
         """Generate `n_interpolants` colours from the reference colors.

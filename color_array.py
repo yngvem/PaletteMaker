@@ -28,7 +28,7 @@ class ColorArray(np.ndarray):
 
         return rgb_.reshape(rgb.shape)
 
-    def to_rgb(self, illegal_rgb_behaviour=None):
+    def to_rgb(self, illegal_rgb_behavior=None):
         """Translate the colour representation to (s)RGB.
         """
         if self.color_space == "rgb":
@@ -36,20 +36,20 @@ class ColorArray(np.ndarray):
         elif self.color_space == "xyz":
             rgb = self._xyz_to_rgb(self)
 
-            if illegal_rgb_behaviour is None or illegal_rgb_behaviour.lower() == "none":
+            if illegal_rgb_behavior is None or illegal_rgb_behavior.lower() == "none":
                 return rgb
-            elif illegal_rgb_behaviour.lower() == "project":
+            elif illegal_rgb_behavior.lower() == "project":
                 return np.clip(rgb, 0, 1)
-            elif illegal_rgb_behaviour.lower() == "nan":
+            elif illegal_rgb_behavior.lower() == "nan":
                 rgb = self._set_illegal_vals_nan(rgb)
                 return rgb
             else:
                 raise ValueError(
-                    'Illegal rgb behaviour must be "none", "project" or "nan"'
+                    'Illegal rgb behavior must be "none", "project" or "nan"'
                 )
 
         else:
-            return self.to_xyz().to_rgb(illegal_rgb_behaviour)
+            return self.to_xyz().to_rgb(illegal_rgb_behavior)
 
     def to_lab(self):
         """Translate the colour representation to CIELAB.
